@@ -22,7 +22,7 @@ public class Usuario implements UserDetails{
     @Column(name = "idUsuario")
     private Long id;
     private String nome;
-    @Column(nullable = false, unique = true) 
+    @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false)
     private String senha;
@@ -85,7 +85,9 @@ public class Usuario implements UserDetails{
     }
     /**
      * Métodos da Interface User Details do SpringBoot
-     */
+     * conta de usuario
+    **/
+     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
@@ -114,5 +116,5 @@ public class Usuario implements UserDetails{
     public boolean isEnabled() {
         return true;
     }
-    
+
 }

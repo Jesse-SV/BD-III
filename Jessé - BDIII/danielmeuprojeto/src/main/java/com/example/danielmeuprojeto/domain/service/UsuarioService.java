@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.danielmeuprojeto.domain.exception.BadRequestException;
 import com.example.danielmeuprojeto.domain.exception.ResourceNotFoundException;
 import com.example.danielmeuprojeto.domain.model.Usuario;
 import com.example.danielmeuprojeto.domain.model.dto.usuario.UsuarioRequestDTO;
@@ -35,29 +36,56 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDTO, UsuarioRe
     public UsuarioResponseDTO obterPorId(Long id) {
         
         //Optinal é literalmente opcional, o que previne uma quebra de código
-        Optional<Usuario> usuario = usuarioRepository.findById(id);
-        if(usuario.isEmpty()){
-            throw new ResourceNotFoundException("Não foi possível obter o usuário com o id" + id);
+        Optional<Usuario> optUsuario = usuarioRepository.findById(id);
+        if(optUsuario.isEmpty()){
+            throw new ResourceNotFoundException("Não foi possível obter o usuário com o id " + id);
         }
-        return mapper.map(usuario, UsuarioResponseDTO.class);
+        return mapper.map(optUsuario.get(), UsuarioResponseDTO.class);
     }
 
     @Override
     public UsuarioResponseDTO cadastrar(UsuarioRequestDTO dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'cadastrar'");
+        if(dto.getEmail() == null || dto.getSenha() == null){
+            throw new BadRequestException("Email e Senha são Obrigatórios");
+        }
+        Optional<Usuario> optUsuario = usuarioRepository.findByEmail(dto.getEmail());
+        if(optUsuario.isPresent()){
+            throw new BadRequestException("Um usuário existente já possui este Email");
+        }
+        //Transforma em usuario do da model, salva
+        Usuario usuario = mapper.map(dto, Usuario.class);
+        usuario.setDataCadastro(new Date());
+        //Criptografar senha
+        usuario = usuarioRepository.save(usuario);
+        //Depois transforma em UsuarioResponseDTO e retorna
+        return mapper.map(usuario, UsuarioResponseDTO.class);
     }
 
     @Override
     public UsuarioResponseDTO atualizar(Long id, UsuarioRequestDTO dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'atualizar'");
+        UsuarioResponseDTO usuarioBanco = obterPorId(id);
+        if(dto.getEmail() == null || dto.getSenha() == null){
+            throw new BadRequestException("Email e Senha são Obrigatórios");
+        }
+        //Transforma em usuario do da model, salva
+        Usuario usuario = mapper.map(dto, Usuario.class);
+        usuario.setId(id);
+        usuario.setDataCadastro(usuarioBanco.getDataCadastro());
+        usuario.setDataInativacao(usuarioBanco.getDataInativacao());
+        usuario = usuarioRepository.save(usuario);
+        //Depois transforma em UsuarioResponseDTO e retorna
+        return mapper.map(usuario, UsuarioResponseDTO.class);
     }
 
     @Override
     public void deletar(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deletar'");
+        Optional<Usuario> optUsuario = usuarioRepository.findById(id);
+        if(optUsuario.isEmpty()){
+            throw new BadRequestException("Não foi possível obter o usuário com o Id ");
+        }
+        Usuario usuario = optUsuario.get();
+        usuario.setDataInativacao(new Date());
+        usuarioRepository.save(usuario);
     }
     
 }
