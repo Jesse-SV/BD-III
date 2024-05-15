@@ -17,7 +17,6 @@ import com.example.danielmeuprojeto.domain.model.Usuario;
 import com.example.danielmeuprojeto.domain.model.dto.usuario.LoginRequestDTO;
 import com.example.danielmeuprojeto.domain.model.dto.usuario.LoginResponseDTO;
 import com.example.danielmeuprojeto.domain.model.dto.usuario.UsuarioResponseDTO;
-import com.example.danielmeuprojeto.domain.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
