@@ -35,7 +35,8 @@ public class CentroCustoService implements ICRUDService<CentroDeCustoRequestDTO,
     @Override
     public CentroDeCustoResponseDTO obterPorId(Long id) {
         Optional<CentroDeCusto> optCentroDeCusto = repository.findById(id);
-        if(optCentroDeCusto.isEmpty()){
+        Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(optCentroDeCusto.isEmpty() || optCentroDeCusto.get().getId() != usuario.getId()){
             throw new ResourceNotFoundException("Não foi possível encontrar o Centro de Custo com o id " + id);
         }
         return mapper.map(optCentroDeCusto.get(), CentroDeCustoResponseDTO.class);
