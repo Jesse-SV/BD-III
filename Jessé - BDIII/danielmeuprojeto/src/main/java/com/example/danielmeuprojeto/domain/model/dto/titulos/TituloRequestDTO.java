@@ -12,7 +12,7 @@ public class TituloRequestDTO {
     private List<CentroDeCustoRequestDTO> centrosDeCustos;
     private Double valor;
     private Date dataCadastro;
-    private Date dataReferencial;
+    private Date dataReferencia;
     private Date dataVencimento;
     private Date dataPagamento;
     private String observacao;
@@ -47,11 +47,11 @@ public class TituloRequestDTO {
     public void setDataCadastro(Date dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
-    public Date getDataReferencial() {
-        return dataReferencial;
+    public Date getDataReferencia() {
+        return dataReferencia;
     }
-    public void setDataReferencial(Date dataReferencial) {
-        this.dataReferencial = dataReferencial;
+    public void setDataReferencia(Date dataReferencia) {
+        this.dataReferencia = dataReferencia;
     }
     public Date getDataVencimento() {
         return dataVencimento;
